@@ -4,6 +4,12 @@ using UnityEngine.InputSystem;
 
 public class Lander : MonoBehaviour
 {
+    public event EventHandler OnUpForce;
+    public event EventHandler OnRightForce;
+    public event EventHandler OnLeftForce;
+    public event EventHandler OnBeforeForce;
+
+
     private Rigidbody2D landerRigidbody2D;
     private float force = 700f;
     float turnSpeed = 100f;
@@ -16,24 +22,27 @@ public class Lander : MonoBehaviour
 
     private void FixedUpdate()
     {
+        OnBeforeForce?.Invoke(this, EventArgs.Empty);
         //Input System
         if (Keyboard.current.upArrowKey.isPressed)
         {
             landerRigidbody2D.AddForce(force * transform.up * Time.deltaTime);
+            OnUpForce?.Invoke(this, EventArgs.Empty);
         }
 
         if (Keyboard.current.leftArrowKey.isPressed)
         {
             landerRigidbody2D.AddTorque(+turnSpeed * Time.deltaTime);
-
+            OnLeftForce?.Invoke(this, EventArgs.Empty);
         }
 
         if (Keyboard.current.rightArrowKey.isPressed)
         {
             landerRigidbody2D.AddTorque(-turnSpeed * Time.deltaTime);
+            OnRightForce?.Invoke(this, EventArgs.Empty);
         }
 
-       
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision2D)
@@ -75,6 +84,9 @@ public class Lander : MonoBehaviour
         Debug.Log("landingAngleScore: " + landingAngleScore);
         Debug.Log("landingSpeedScore: " + landingSpeedScore);
 
+        int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScoreMultiplier());
+
+        Debug.Log(score);
     }
 
     private void Update()
