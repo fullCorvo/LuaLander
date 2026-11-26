@@ -4,25 +4,49 @@ using UnityEngine.InputSystem;
 
 public class Lander : MonoBehaviour
 {
+    //Singleton
+    public static Lander Instance { get; private set; }
+
     public event EventHandler OnUpForce;
     public event EventHandler OnRightForce;
     public event EventHandler OnLeftForce;
     public event EventHandler OnBeforeForce;
-
+    public event EventHandler OnCoinPickup;
+    public event EventHandler<OnLandedEventArgs> OnLanded;
+    public class OnLandedEventArgs : EventArgs {
+        public int landingScore;
+    }
 
     private Rigidbody2D landerRigidbody2D;
     private float force = 700f;
     float turnSpeed = 100f;
+    private float fuelAmount = 10f;
+
 
     //Awake to get references attached to this object, Start to get external references
     private void Awake()
     {
+        Instance = this; //Singleton
+
         landerRigidbody2D = GetComponent<Rigidbody2D>();
     }
+
 
     private void FixedUpdate()
     {
         OnBeforeForce?.Invoke(this, EventArgs.Empty);
+
+        if (fuelAmount <= 0f)
+        {
+            //No fuel
+            return;
+        }
+
+        if (Keyboard.current.upArrowKey.isPressed || Keyboard.current.leftArrowKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
+        {
+            ConsumeFuel();
+        }
+
         //Input System
         if (Keyboard.current.upArrowKey.isPressed)
         {
@@ -41,9 +65,8 @@ public class Lander : MonoBehaviour
             landerRigidbody2D.AddTorque(-turnSpeed * Time.deltaTime);
             OnRightForce?.Invoke(this, EventArgs.Empty);
         }
-
-
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision2D)
     {
@@ -52,7 +75,6 @@ public class Lander : MonoBehaviour
             Debug.Log("Crash on terrain!");
             return;
         }
-
 
         float softLandingVelocityMagnitude = 4f;
         float relativeVelocityMagnitude = collision2D.relativeVelocity.magnitude;
@@ -81,24 +103,33 @@ public class Lander : MonoBehaviour
         float maxScoreAmountLandingSpeed = 100;
         float landingSpeedScore = (softLandingVelocityMagnitude - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed;
 
-        Debug.Log("landingAngleScore: " + landingAngleScore);
-        Debug.Log("landingSpeedScore: " + landingSpeedScore);
+        int landingScore = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScoreMultiplier());
 
-        int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScoreMultiplier());
-
-        Debug.Log(score);
+        OnLanded?.Invoke(this, new OnLandedEventArgs {
+            landingScore = landingScore
+        });
     }
 
-    private void Update()
+
+    private void OnTriggerEnter2D(Collider2D collider2D)
     {
-        //Legacy Input Manager
-        /*if (Input.GetKey(KeyCode.UpArrow))
-          {
-              Debug.Log("Up");
+        if (collider2D.gameObject.TryGetComponent(out FuelPickup fuelPickup))
+        {
+            float addFuelAmount = 10f;
+            fuelAmount += addFuelAmount;
+            fuelPickup.DestroySelf();
+        }
 
-          }*/
+        if (collider2D.gameObject.TryGetComponent(out CoinPickup coinPickup))
+        {
+            OnCoinPickup?.Invoke(this, EventArgs.Empty);
+            coinPickup.DestroySelf();
+        }
+    }
 
-
-
+    private void ConsumeFuel()
+    {
+        float fuelConsumptionAmount = 1f;
+        fuelAmount -= fuelConsumptionAmount * Time.deltaTime;
     }
 }

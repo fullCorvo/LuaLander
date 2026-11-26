@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.00
   subtype: lunarLanderFree
-  lastShownTimestamp: 1795617038
+  lastShownTimestamp: 1795721001
   lastUpdateResponse:
     version: 1.00
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1795617039
+  checkedLastUpdateTimestamp: 1795721001
   lastQOTDResponse:
     questionId: 365
     questionText: 'What is the possible error in this code:
@@ -39,17 +39,17 @@ MonoBehaviour:
     answerC: 2 ticks at once
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1795617039
+  lastQotdTimestamp: 1795721001
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/codeMonkeyEndOfSummerBundleOct26.png
     topText: Back for a limited time until the END OF SUMMER, 80% OFF all my Courses and Games!
     topLink: summerbundle
     bottomText: FREE Game Dev Insights every week straight to your inbox!
     bottomLink: gamedevreport
-  lastDynamicHeaderTimestamp: 1795617039
+  lastDynamicHeaderTimestamp: 1795721001
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses! Click here!</a>
-  websiteLatestMessageTimestamp: 1795617039
+  websiteLatestMessageTimestamp: 1795721001
   websiteLatestVideos:
     videos:
     - youTubeId: uxMTXmWcF48
@@ -60,4 +60,4 @@ MonoBehaviour:
       title: TOP 10 FREE NEW Assets NOVEMBER 2026!
     - youTubeId: nhx0FqRDSjM
       title: 2027 will be the BEST year for Unity! (and $500,000 for indie devs!)
-  websiteLatestVideosTimestamp: 1795617039
+  websiteLatestVideosTimestamp: 1795721001
